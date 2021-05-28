@@ -1,10 +1,13 @@
 package org.generation.blogPessoal.controller;
 
 import org.generation.blogPessoal.repository.PostagemRepository; //importando a interface
+import org.generation.blogPessoal.services.PostagemServices;
 import org.generation.blogPessoal.model.Postagem; //importando a model
 
 import java.util.List;
 import java.util.Optional;
+
+import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -26,9 +29,10 @@ import org.springframework.web.bind.annotation.RestController;
 public class PostagemController {
 
 	// injetando a classe de repositório dentro do controller
-	@Autowired // garante que todos os serviços da interface PostagemRepository seja acessado a
-				// partir do controller
-	private PostagemRepository repository;
+	// garante que todos os serviços da interface PostagemRepository seja acessado a partir do controller
+	private @Autowired PostagemRepository repository;
+	
+	private @Autowired PostagemServices service;
 
 	// metodo GetAll, recebe uma lista do tipo Postagem
 	@GetMapping("/todos") //Sempre que houver uma requisição externa com o método GET através da url "/postagens" o metodo GetAll será executado
@@ -75,27 +79,27 @@ public class PostagemController {
 	//request body pega algo do corpo do frontEnd que sera requisitado em um formato .json
 	public ResponseEntity<Postagem>  salvarPostagem(@RequestBody Postagem novaPostagem) {
 		
-		//Optional<Postagem> postagemExistente = repository.findByPostagem(novaPostagem.getTitulo());
-		//um optional que pesquisa caso tenha uma postagem com o título passado através do método criado na interface repository
-		
-		/*if(postagemExistente.isPresent()) {
-		//verifica se a postagemExistente está presente
-			//return postagemExistente.get();
-			return null;
-			//retorna o que ta dentro, no caso uma postagem
-		} else {
-			return repository.save(novaPostagem);
-			//retornando um cadastro de postagem com o objeto json passado pelo body, já não exista um usuario com esse titulo
-		}*/
-		// return repository.save(novaPostagem);
-		return ResponseEntity.status(HttpStatus.CREATED).body(repository.save(novaPostagem));
+		//Utiliza do método criado no PostagemService passando o conteúdo passado no body da requisição como parametro
+		return service.cadastrarPostagem(novaPostagem)
+				//se for retornado um optional não vazio o map será executado e retornará um status 201 com a postagem criada
+				.map(postagemCriada -> ResponseEntity.status(201).body(postagemCriada)) 
+				//caso sejá retornado um optional vazio será exibido o status 400
+				.orElse(ResponseEntity.status(400).build());
 		
 	}
 	
+	//é passado o id pelo url que é pego pelo pathvariable, e é passado um objeto com os dados para serem atualizados que são
+	//passados pelo request body
 	//atualizar 
-	@PutMapping("/atualizar")
-	public ResponseEntity<Postagem>  atualizaPostagem(@RequestBody Postagem postagem) {
-		return ResponseEntity.status(200).body(repository.save(postagem));
+	@PutMapping("/atualizar/{id}")
+	public ResponseEntity<Postagem>  atualizaPostagem(@PathVariable (value= "id") Long id, @Valid @RequestBody Postagem postagem) {
+		//é chamado o método atualizar postagem com os dados recebidos como parametro
+		return service.atualizarPostagem(id, postagem)
+				//caso seja retornado um optional não vazio será exibido o status 201 com a postagem atualizada
+				.map(postagemAtualizada -> ResponseEntity.status(201).body(postagemAtualizada))
+				//se for retornado um optional vazio será retornado o status 304
+				.orElse(ResponseEntity.status(304).build());
+		
 	}
 	
 	//deletar
