@@ -1,9 +1,11 @@
 package org.generation.blogPessoal.controller;
 
 import java.util.List;
+import java.util.Optional;
 
 import javax.validation.Valid;
 
+import org.generation.blogPessoal.model.Postagem;
 import org.generation.blogPessoal.model.Tema; //importando o model tema
 import org.generation.blogPessoal.repository.TemaRepository; //importando o repositorio TemaRepository
 import org.generation.blogPessoal.services.TemaServices;
@@ -68,7 +70,17 @@ public class TemaController {
 	} 
 	
 	@DeleteMapping("deletar/{id}") //deletar tema
-	public void delete(@PathVariable long id) {
-		repository.deleteById(id);
+	public String delete(@PathVariable long id) {
+		
+		Optional<Tema> temaExistente = repository.findById(id);
+		
+		if(temaExistente.isPresent()) {
+			repository.deleteById(id);
+			return "Deletado";
+		}
+		else {
+			return "Não existe um tema com esse id";
+		}
+		
 	}
 }

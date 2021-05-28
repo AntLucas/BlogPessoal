@@ -3,6 +3,7 @@ package org.generation.blogPessoal.controller;
 import org.generation.blogPessoal.repository.PostagemRepository; //importando a interface
 import org.generation.blogPessoal.services.PostagemServices;
 import org.generation.blogPessoal.model.Postagem; //importando a model
+import org.generation.blogPessoal.model.Tema;
 
 import java.util.List;
 import java.util.Optional;
@@ -102,9 +103,18 @@ public class PostagemController {
 		
 	}
 	
-	//deletar
+	
 	@DeleteMapping("/deletar/{id}")
-	public void deletaPostagem(@PathVariable long id) {
-		repository.deleteById(id);
+	public String deletaPostagem(@PathVariable long id) {
+		Optional<Postagem> postagemExistente = repository.findById(id);
+		
+		if(postagemExistente.isPresent()) {
+			repository.deleteById(id);
+			return "Deletado";
+		}
+		else {
+			return "Não existe uma postagem com esse id";
+		}
+
 	}
 }
