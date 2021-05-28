@@ -6,11 +6,14 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 
 //model para postagem
@@ -35,6 +38,15 @@ public class Postagem {
 	@Temporal(TemporalType.TIMESTAMP) //indica que estamos trabalhando com tempo e o tipo de tempo
 	//pega a data do sistema
 	private Date date = new java.sql.Date(System.currentTimeMillis());
+	
+	
+	//definindo as relações entre os models
+	@ManyToOne //define que a relação é de muitos para um, muitas postagens possuem um mesmo tema
+	@JsonIgnoreProperties("postagem") //ignorará a propriedade lista - postagem do model tema
+	private Tema tema; //Tema da postagem
+	
+	
+
 
 	public long getId() {
 		return id;
@@ -68,6 +80,13 @@ public class Postagem {
 		this.date = date;
 	}
 	
+	public Tema getTema() {
+		return tema;
+	}
+
+	public void setTema(Tema tema) {
+		this.tema = tema;
+	}
 	
 
 }
