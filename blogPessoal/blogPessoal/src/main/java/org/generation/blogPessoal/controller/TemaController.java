@@ -2,8 +2,11 @@ package org.generation.blogPessoal.controller;
 
 import java.util.List;
 
+import javax.validation.Valid;
+
 import org.generation.blogPessoal.model.Tema; //importando o model tema
 import org.generation.blogPessoal.repository.TemaRepository; //importando o repositorio TemaRepository
+import org.generation.blogPessoal.services.TemaServices;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -23,7 +26,9 @@ public class TemaController {
 
 	@Autowired
 	private TemaRepository repository; //injetando dependência
-
+	@Autowired
+	private TemaServices service;
+	
 	@GetMapping("/todos") //buscar todos
 	public ResponseEntity<List<Tema>> getAll() {
 
@@ -50,14 +55,16 @@ public class TemaController {
 	
 	@PostMapping("/cadastrar")//cadastrar tema
 	public ResponseEntity<Tema> post(@RequestBody Tema tema){
-		return ResponseEntity.status(201)
-				.body(repository.save(tema));
+		return service.cadastrarTema(tema)
+				.map(cadastro -> ResponseEntity.status(200).body(cadastro))
+				.orElse(ResponseEntity.status(400).build());
 	} 
 	
-	@PutMapping("/atualizar")//atualizar tema
-	public ResponseEntity<Tema> put(@RequestBody Tema tema){
-		return ResponseEntity.status(201)
-				.body(repository.save(tema));
+	@PutMapping("/atualizar/{id}")//atualizar tema
+	public ResponseEntity<Tema> put(@PathVariable (value = "id") Long id,@Valid @RequestBody Tema tema){
+		return service.atualizarTema(id, tema)
+				.map(temaAtualizado -> ResponseEntity.status(201).body(temaAtualizado))
+				.orElse(ResponseEntity.status(304).build());
 	} 
 	
 	@DeleteMapping("deletar/{id}") //deletar tema

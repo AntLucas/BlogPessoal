@@ -15,7 +15,7 @@ public class PostagemServices {
 	
 	/**
 	 * Método utilizado para verificar se já existe uma postagem com o título que está sendo cadastrado
-	 * @param novaPostagem
+	 * @param novaPostagem - Objeto Postagem passado pelo controller
 	 * @return Optional com uma entidade Postagem caso o título não tenha sido utilizado ou um Optional vazio caso o título já tenha sido utilizado
 	 */
 	public Optional<Postagem> cadastrarPostagem(Postagem novaPostagem){
@@ -43,6 +43,7 @@ public class PostagemServices {
 		if(postagemExistente.isPresent()) {
 			postagemExistente.get().setTexto(atualizadaPostagem.getTexto());
 			postagemExistente.get().setTitulo(atualizadaPostagem.getTitulo());
+			postagemExistente.get().setTema(atualizadaPostagem.getTema());
 			
 			return Optional.ofNullable(repository.save(postagemExistente.get()));
 		} else {
