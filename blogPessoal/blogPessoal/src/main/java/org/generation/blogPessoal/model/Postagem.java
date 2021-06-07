@@ -3,9 +3,11 @@ package org.generation.blogPessoal.model;
 import java.util.Date;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
@@ -43,10 +45,14 @@ public class Postagem {
 	//definindo as relações entre os models
 	@ManyToOne //define que a relação é de muitos para um, muitas postagens possuem um mesmo tema
 	@JsonIgnoreProperties("postagem") //ignorará a propriedade lista - postagem do model tema
+	@JoinColumn(name = "tema")
 	private Tema tema; //Tema da postagem
 	
+	@ManyToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name = "usuarioPostagem")
+	@JsonIgnoreProperties({ "idUsuario","email", "senha", "postagens" })
+	private Usuario usuarioPostagem;
 	
-
 
 	public long getId() {
 		return id;
@@ -87,6 +93,13 @@ public class Postagem {
 	public void setTema(Tema tema) {
 		this.tema = tema;
 	}
-	
+
+	public Usuario getUsuarioPostagem() {
+		return usuarioPostagem;
+	}
+
+	public void setUsuarioPostagem(Usuario usuarioPostagem) {
+		this.usuarioPostagem = usuarioPostagem;
+	}	
 
 }

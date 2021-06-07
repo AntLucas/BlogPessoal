@@ -42,6 +42,7 @@ public class PostagemController {
 		//return ResponseEntity.ok(repository.findAll()); //retornar ok, com a requisição de todas as postagens
 		//return ResponseEntity.status(202).body(repository.findAll()); // retorna um status 202
 		List<Postagem> listaDePostagem = repository.findAll();
+		
 		//verifica se a lista está vazia ou não
 		if(!listaDePostagem.isEmpty()) {
 			//caso não seja vazia retorna um status 200 ok com a lista
@@ -76,12 +77,12 @@ public class PostagemController {
 	}
 	
 	//cadastro
-	@PostMapping("/salvar")
+	@PostMapping("/salvar/{idUsuario}")
 	//request body pega algo do corpo do frontEnd que sera requisitado em um formato .json
-	public ResponseEntity<Postagem>  salvarPostagem(@RequestBody Postagem novaPostagem) {
+	public ResponseEntity<Postagem>  salvarPostagem(@PathVariable (value = "idUsuario") Long idUsuario,@RequestBody Postagem novaPostagem) {
 		
 		//Utiliza do método criado no PostagemService passando o conteúdo passado no body da requisição como parametro
-		return service.cadastrarPostagem(novaPostagem)
+		return service.cadastrarPostagem(idUsuario, novaPostagem)
 				//se for retornado um optional não vazio o map será executado e retornará um status 201 com a postagem criada
 				.map(postagemCriada -> ResponseEntity.status(201).body(postagemCriada)) 
 				//caso sejá retornado um optional vazio será exibido o status 400

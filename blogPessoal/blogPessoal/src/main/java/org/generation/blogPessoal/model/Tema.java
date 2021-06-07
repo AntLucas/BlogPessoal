@@ -27,7 +27,7 @@ public class Tema {
 	@OneToMany(mappedBy = "tema", cascade = CascadeType.ALL) // define que a relação é de um para muitos, um tema pode possuir diversas postagens,
 	//mapped by define quais atributos estamos mapeando, estamos mapeando o atributo tema da tabela Postagem
 	//cascade = CascadeType.ALL indica que quando for alterado algo na tabela tema também será alterado na tabela postagem
-	@JsonIgnoreProperties("tema") // ignorando o tema da tabela postagem
+	@JsonIgnoreProperties({"tema", "usuarioPostagem"}) // ignorando o tema da tabela postagem
 	private List<Postagem> postagem;
 
 	public long getId() {
