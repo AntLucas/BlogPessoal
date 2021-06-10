@@ -26,7 +26,7 @@ class UsuarioModelTest {
 	
 	@BeforeEach
 	public void start() {
-		usuario = new Usuario("Email@teste.com", "134652");
+		usuario = new Usuario("Email@teste.com", "134652", "Antonio");
 	}
 	
 	@Test
@@ -39,7 +39,7 @@ class UsuarioModelTest {
 	@Test
 	void testValidaAtributosNulos() {
 		Usuario usuarioErro = new Usuario();
-		usuarioErro.setEmail("Yuri Boaz");
+		usuarioErro.setEmail("Email@teste2.com");
 		Set<ConstraintViolation<Usuario>> violacao = validator.validate(usuarioErro);
 		System.out.println(violacao.toString());
 		assertFalse(violacao.isEmpty());

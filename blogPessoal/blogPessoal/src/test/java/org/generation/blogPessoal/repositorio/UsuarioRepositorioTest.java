@@ -24,15 +24,15 @@ class UsuarioRepositorioTest {
 	
 	@BeforeAll
 	void start() {
-		Usuario usuario = new Usuario("antonio@teste.com", "134652");
+		Usuario usuario = new Usuario("antonio@teste.com", "134652", "Antonio");
 		if(repositorio.findByEmail(usuario.getEmail())!=null)
 			repositorio.save(usuario);
 		
-		usuario = new Usuario("email@teste.com", "134652");
+		usuario = new Usuario("email@teste.com", "134652", "Antonios");
 		if(repositorio.findByEmail(usuario.getEmail())!=null)
 			repositorio.save(usuario);
 		
-		usuario = new Usuario("teste@email.com", "134652");
+		usuario = new Usuario("teste@email.com", "134652", "Antonio3");
 		if(repositorio.findByEmail(usuario.getEmail())!=null)
 			repositorio.save(usuario);
 	}
@@ -47,7 +47,14 @@ class UsuarioRepositorioTest {
 	@Test
 	public void findAllByUsuarioContainingIgnoreCaseRetornaTresContato() {
 
-		List<Usuario> listaDeUsuarios = repositorio.findAllByEmailContainingIgnoreCase("Boaz");
+		List<Usuario> listaDeUsuarios = repositorio.findAllByEmailContainingIgnoreCase("teste");
+		assertEquals(3, listaDeUsuarios.size());
+	}
+	
+	@Test
+	public void findAllByNomeContainingIgnoreCaseRetornaTresContato() {
+
+		List<Usuario> listaDeUsuarios = repositorio.findAllByNomeContainingIgnoreCase("Ant");
 		assertEquals(3, listaDeUsuarios.size());
 	}
 	

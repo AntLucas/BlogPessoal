@@ -42,9 +42,10 @@ public class Usuario {
 
 	}
 
-	public Usuario(@NotNull String email, @NotNull String senha) {
+	public Usuario(@NotNull String email, @NotNull String senha, @NotNull String nome) {
 		this.email = email;
 		this.senha = senha;
+		this.nome = nome;
 	}
 
 	public Long getIdUsuario() {

@@ -2,6 +2,8 @@ package org.generation.blogPessoal.controladores;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.util.List;
+
 import org.generation.blogPessoal.model.Usuario;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Disabled;
@@ -30,8 +32,8 @@ class UsuarioControladorTest {
 	
 	@BeforeAll
 	public void start() {
-		usuario = new Usuario("antonio@teste.com","134652");
-		usuarioAlterar = new Usuario("teste@antonio.com", "654321");
+		usuario = new Usuario("antonio@teste.com","134652", "Antonio");
+		usuarioAlterar = new Usuario("teste@antonio.com", "654321", "Antonio");
 	}
 
 	@Disabled
@@ -45,19 +47,19 @@ class UsuarioControladorTest {
 		 * */
 		HttpEntity<Usuario> request = new HttpEntity<Usuario>(usuario);
 		
-		ResponseEntity<Usuario> resposta = testRestTemplate.exchange("/usuarios/cadastrar", HttpMethod.POST, request, Usuario.class);
+		ResponseEntity<String> resposta = testRestTemplate.exchange("/usuarios/cadastrar", HttpMethod.POST, request, String.class);
 		assertEquals(HttpStatus.CREATED, resposta.getStatusCode());
 	}
 	
 	@Disabled
 	@Test
 	void deveRetornarListadeUsuarioRetornaStatus200() {
-		ResponseEntity<String> resposta = testRestTemplate.withBasicAuth("teste@antonio.com", "654321")
-				.exchange("/usuarios/todes", HttpMethod.GET, null, String.class);
+		ResponseEntity<Object> resposta = testRestTemplate.withBasicAuth("antonio@teste.com", "134652")
+				.exchange("/usuarios/todes", HttpMethod.GET, null, Object.class);
 		assertEquals(HttpStatus.OK, resposta.getStatusCode());
 	}
 	
-	
+	@Disabled
 	@Test
 	void deveAtualizarSenhaUsuarioRetornaStatus201() {
 		
@@ -68,8 +70,9 @@ class UsuarioControladorTest {
 		 * */
 		HttpEntity<Usuario> request = new HttpEntity<Usuario>(usuarioAlterar);
 		
-		ResponseEntity<Usuario> resposta = testRestTemplate.withBasicAuth("teste@antonio.com", "654321")
-				.exchange("/usuarios/atualizar", HttpMethod.PUT, request, Usuario.class);
+		ResponseEntity<String> resposta = testRestTemplate.withBasicAuth("antonio@teste.com", "134652")
+				// invés de {idUsuario} passar número referente ao id do usuário no banco
+				.exchange("/usuarios/atualizar/{idUsuario}", HttpMethod.PUT, request, String.class);
 		assertEquals(HttpStatus.CREATED, resposta.getStatusCode());
 	}
 	
