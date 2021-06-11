@@ -2,9 +2,8 @@ package org.generation.blogPessoal.controladores;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import java.util.List;
-
 import org.generation.blogPessoal.model.Usuario;
+import org.generation.blogPessoal.model.UsuarioLogin;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
@@ -74,6 +73,32 @@ class UsuarioControladorTest {
 				// invés de {idUsuario} passar número referente ao id do usuário no banco
 				.exchange("/usuarios/atualizar/{idUsuario}", HttpMethod.PUT, request, String.class);
 		assertEquals(HttpStatus.CREATED, resposta.getStatusCode());
+	}
+	
+	@Disabled
+	@Test
+	void deveLogarComEmailESenhaRetornaStatus200() {
+		
+		/*
+		 * Método para testar login 
+		 * 
+		 * */
+		UsuarioLogin login = new UsuarioLogin();
+		login.setEmail(usuarioAlterar.getEmail());
+		login.setSenha(usuarioAlterar.getSenha());
+		HttpEntity<UsuarioLogin> request = new HttpEntity<UsuarioLogin>(login);
+		
+		ResponseEntity<UsuarioLogin> resposta = testRestTemplate.exchange("/usuarios/logar", HttpMethod.POST, request, UsuarioLogin.class);
+		assertEquals(HttpStatus.OK, resposta.getStatusCode());
+	}
+	
+	@Disabled
+	@Test
+	void deveRetornarMensagemDeDelete() {
+		ResponseEntity<String> resposta = testRestTemplate.withBasicAuth("teste@antonio.com", "654321")
+				// invés de {idUsuario} passar número referente ao id do usuário no banco
+				.exchange("/usuarios/deletar/{idUsuario}", HttpMethod.DELETE, null, String.class);
+		assertEquals(HttpStatus.OK, resposta.getStatusCode());
 	}
 	
 	
